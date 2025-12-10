@@ -1,6 +1,7 @@
 # Cardano PreProd Live Explorer
 
-A real-time blockchain explorer for Cardano's PreProd testnet that streams live blocks and transactions using WebSockets.
+A real-time blockchain explorer for Cardano's PreProd testnet that streams live blocks and transactions using WebSockets. 
+https://blockchainliveexpolrer-production-af39.up.railway.app/
 
 ## ✨ Features
 
@@ -39,4 +40,14 @@ npm install
 npm run dev
 ```
 
+### with docker 
+ ```bash
+ docker compose up --build
+```
+Hosted URLs
+
+Backend: https://blockchainliveexpolrer-production-b895.up.railway.app/
+WebSocket endpoint: wss://blockchainliveexpolrer-production-b895.up.railway.app/ws
+
+Frontend: https://blockchainliveexpolrer-production-af39.up.railway.app/
 
