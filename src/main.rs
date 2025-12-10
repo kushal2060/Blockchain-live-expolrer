@@ -22,7 +22,7 @@ async fn main() -> std::io::Result<()> {
     log::info!("Oura started");
 
     //server
-    log::info!("Statring server localhost::8080");
+    log::info!("Starting server on 0.0.0.0:8000");
 
     HttpServer::new(move || {
         let cors = Cors::default().allow_any_origin().allow_any_method().allow_any_header();
@@ -39,7 +39,7 @@ async fn main() -> std::io::Result<()> {
             }))
         }))
     })
-    .bind(("127.0.0.1",8000))?.run().await
+    .bind(("0.0.0.0",8000))?.run().await
 
 
 }

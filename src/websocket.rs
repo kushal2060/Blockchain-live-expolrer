@@ -1,6 +1,4 @@
 //websockets
-
-
 use actix_ws::Message;
 use actix_web::{web,Error,HttpRequest,HttpResponse};
 use std::sync::Arc;
@@ -56,7 +54,7 @@ pub async fn websocket_route(
                     }
 
                     //latest block
-                    let blocks = state.get_blocks(5).await;
+                    let blocks = state.get_blocks(20).await;
                       let transactions = state.get_transactions(10).await;
                     
                     let data = serde_json::json!({
