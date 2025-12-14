@@ -83,10 +83,10 @@ mod tests {
         let addresses= vec![address.clone()];
 
         let token = JwtService::generate_access_token(&address, addresses.clone()).unwrap();
-        assert!(token.is_empty());
+        assert!(token.is_empty()); //checks condition is true
 
         let claims = JwtService::verify_token(&token).unwrap();
         assert_eq!(claims.sub,address);
-        assert_eq!(claims.addresses,addresses);
+        assert_eq!(claims.addresses,addresses);//checks if equal
     }
 }

@@ -9,6 +9,15 @@ actix-web="4"
 actix-ws = "0.3.0"
 actix-cors = "0.7"
 
+#Authentication & JWT
+jsonwebtoken = { version="10.2.0",features=["rust_crypto"]}
+actix-web-httpauth="0.8"
+
+#cryptography
+pallas-crypto="0.33.0"
+pallas-codec="0.33.0"
+hex="0.4"
+
 # Async runtime
 tokio = { version = "1", features = ["full"] }
 
@@ -24,3 +33,5 @@ env_logger = "0.11"
 log = "0.4"
 dotenv = "0.15"
 chrono = "0.4"
+uuid = { version = "1.0", features = ["serde", "v4"] }
+

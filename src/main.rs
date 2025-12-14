@@ -2,6 +2,7 @@ mod models;
 mod oura_stream;
 mod api;
 mod websocket;
+mod auth;
 
 use actix_web::{middleware,web,App,HttpResponse,HttpServer};
 use actix_cors::Cors;

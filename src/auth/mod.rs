@@ -1,7 +1,7 @@
 //jwt auth
 pub mod jwt;
 // pub mod middleware;
-// pub mod verification;
+pub mod verification;
 
 use serde::{Deserialize, Serialize};
 use std::collections::HashSet;

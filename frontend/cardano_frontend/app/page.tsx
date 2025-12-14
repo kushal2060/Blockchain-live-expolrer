@@ -13,6 +13,7 @@ export default function Home() {
           <p className="text-gray-600 text-lg">
             Live blockchain data from Cardano PreProd Testnet
           </p>
+          <p>Connect your wallet to explore more features.</p>
         </header>
 
         <Stats />
