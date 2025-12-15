@@ -1,8 +1,8 @@
 //jwt auth
 pub mod jwt;
-// pub mod middleware;
+pub mod middleware;
 pub mod verification;
-
+pub mod routes;
 use serde::{Deserialize, Serialize};
 use std::collections::HashSet;
 
@@ -28,7 +28,7 @@ pub struct AuthRes{
 pub struct UserInfo{
     pub address: String,
     pub wallet_addresses: Vec<String>, //sabbai wallet addresses haru
-    pub createsd_at: i64,
+    pub created_at: i64,
 }
 
 //jwt claims
