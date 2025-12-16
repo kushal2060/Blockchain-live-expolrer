@@ -1,0 +1,128 @@
+MIT License
+
+Copyright (c) 2025 Kushal Acharya
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+---
+
+## Third-Party Licenses
+
+This project uses the following open-source libraries:
+
+### Backend Dependencies
+
+- **Oura** - Apache License 2.0
+  - Copyright (c) txpipe
+  - https://github.com/txpipe/oura
+
+- **Actix-web** - Apache License 2.0 / MIT
+  - Copyright (c) 2017-2024 Actix Team
+  - https://github.com/actix/actix-web
+
+- **Tokio** - MIT License
+  - Copyright (c) 2024 Tokio Contributors
+  - https://github.com/tokio-rs/tokio
+
+- **Serde** - Apache License 2.0 / MIT
+  - Copyright (c) 2014 Erick Tryzelaar and David Tolnay
+  - https://github.com/serde-rs/serde
+
+- **jsonwebtoken** - MIT License
+  - Copyright (c) 2015 Keats
+  - https://github.com/Keats/jsonwebtoken
+
+- **pallas-crypto** - Apache License 2.0
+  - Copyright (c) txpipe
+  - https://github.com/txpipe/pallas
+
+### Frontend Dependencies
+
+- **Next.js** - MIT License
+  - Copyright (c) 2024 Vercel, Inc.
+  - https://github.com/vercel/next.js
+
+- **React** - MIT License
+  - Copyright (c) Meta Platforms, Inc. and affiliates
+  - https://github.com/facebook/react
+
+- **Tailwind CSS** - MIT License
+  - Copyright (c) Tailwind Labs, Inc.
+  - https://github.com/tailwindlabs/tailwindcss
+
+- **TypeScript** - Apache License 2.0
+  - Copyright (c) Microsoft Corporation
+  - https://github.com/microsoft/TypeScript
+
+---
+
+## Cardano Ecosystem
+
+This project is built for the Cardano blockchain ecosystem:
+
+- **Cardano** - Apache License 2.0
+  - Copyright (c) Input Output Global, Inc.
+  - https://github.com/input-output-hk/cardano-node
+
+- **CIP-30 Standard** - Creative Commons Attribution 4.0
+  - Cardano Improvement Proposal 30 (dApp Connector)
+  - https://cips.cardano.org/cips/cip30/
+
+---
+
+## Attribution
+
+When using this software, please include:
+
+1. A copy of this license file
+2. Attribution to the original author
+3. A link to the original repository
+
+Example attribution:
+```
+Based on Cardano PreProd Live Explorer
+by [Your Name] - https://github.com/yourusername/cardano-explorer
+Licensed under MIT License
+```
+
+---
+
+## Disclaimer
+
+This software is provided for educational and development purposes on the 
+Cardano PreProd testnet. 
+
+**Important:**
+- This is testnet software - DO NOT use with mainnet/real ADA
+- No warranty is provided
+- Use at your own risk
+- Always verify transactions before signing
+- Never share your seed phrase or private keys
+
+---
+
+## Contact
+
+For questions about licensing:
+- Email: kushal507@gmail.com
+- GitHub: https://github.com/kushal2060
+
+---
+
+Last updated: December 2024

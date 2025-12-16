@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useEffect, useState } from 'react';
@@ -6,7 +5,12 @@ import { apiClient } from '@/lib/api';
 import { useAuth } from '@/context/AuthContext';
 import { useWallet } from '@/context/WalletContext';
 import ProtectedRoute from '@/components/auth/ProtectedRoute';
-import { Calendar, Copy, AlertTriangle, Globe, ExternalLink, Wallet, Link as LinkIcon } from 'lucide-react';
+import { Calendar, Copy, AlertTriangle, Globe, ExternalLink, Wallet, Link as LinkIcon, RefreshCw, Coins } from 'lucide-react';
+
+function formatAda(lovelace: number | string) {
+  const amount = typeof lovelace === 'string' ? parseInt(lovelace) : lovelace;
+  return `${(amount / 1_000_000).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 6 })} ₳`;
+}
 
 export default function MyWalletsPage() {
   const { user, refreshUser } = useAuth();
@@ -14,6 +18,29 @@ export default function MyWalletsPage() {
   const [showAddModal, setShowAddModal] = useState(false);
   const [isAdding, setIsAdding] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [balanceData, setBalanceData] = useState<any>(null);
+  const [loadingBalance, setLoadingBalance] = useState(false);
+
+  useEffect(() => {
+    if (connectedWallet?.address) {
+      loadBalance();
+    }
+  }, [connectedWallet]);
+
+  const loadBalance = async () => {
+    if (!connectedWallet?.address) return;
+    
+    try {
+      setLoadingBalance(true);
+      const addresses = [connectedWallet.address];
+      const data = await apiClient.getUserBalance(addresses);
+      setBalanceData(data);
+    } catch (err) {
+      console.error('Failed to load balance:', err);
+    } finally {
+      setLoadingBalance(false);
+    }
+  };
 
   const handleAddWallet = async (walletId: string) => {
     setIsAdding(true);
@@ -26,12 +53,15 @@ export default function MyWalletsPage() {
       alert('Wallet connected! Sign the message to add it to your account.');
       setShowAddModal(false);
       await refreshUser();
+      await loadBalance(); // Reload balance after adding wallet
     } catch (err: any) {
       setError(err.message);
     } finally {
       setIsAdding(false);
     }
   };
+
+  const totalBalance = balanceData?.balances?.total_ada || 0;
 
   return (
     <ProtectedRoute>
@@ -49,6 +79,51 @@ export default function MyWalletsPage() {
               Manage and monitor your connected Cardano wallets
             </p>
           </div>
+
+          {/* Balance Card */}
+          {connectedWallet && (
+            <div className="bg-linear-to-br from-blue-600 to-purple-600 rounded-2xl shadow-xl border border-blue-400/20 p-8 mb-8 text-white">
+              <div className="flex items-center justify-between mb-6">
+                <div className="flex items-center gap-3">
+                  <div className="w-14 h-14 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center">
+                    <Coins className="w-8 h-8 text-white" />
+                  </div>
+                  <div>
+                    <div className="text-sm text-blue-100 mb-1">Total Balance</div>
+                    <div className="text-4xl font-bold">
+                      {loadingBalance ? (
+                        <span className="text-2xl">Loading...</span>
+                      ) : (
+                        formatAda(totalBalance)
+                      )}
+                    </div>
+                  </div>
+                </div>
+                <button
+                  onClick={loadBalance}
+                  disabled={loadingBalance}
+                  className="p-3 bg-white/20 hover:bg-white/30 backdrop-blur-sm rounded-xl transition-colors disabled:opacity-50"
+                  title="Refresh balance"
+                >
+                  <RefreshCw className={`w-5 h-5 ${loadingBalance ? 'animate-spin' : ''}`} />
+                </button>
+              </div>
+              
+              {balanceData?.balances?.per_address && balanceData.balances.per_address.length > 0 && (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  {balanceData.balances.per_address.map((addrBalance: any, idx: number) => (
+                    <div key={idx} className="bg-white/10 backdrop-blur-sm rounded-lg p-4 border border-white/20">
+                      <div className="text-xs text-blue-100 mb-1">Wallet {idx + 1}</div>
+                      <div className="text-lg font-bold">{formatAda(addrBalance.ada_balance)}</div>
+                      <div className="text-xs text-blue-200 mt-2 font-mono truncate">
+                        {addrBalance.address.slice(0, 15)}...{addrBalance.address.slice(-10)}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
 
           {/* Currently Connected */}
           {connectedWallet ? (
@@ -128,60 +203,76 @@ export default function MyWalletsPage() {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {(user?.wallet_addresses || []).map((addr, idx) => (
-                <div
-                  key={addr}
-                  className="group p-5 bg-linear-to-br from-gray-50 to-blue-50/50 rounded-xl border-2 border-gray-200 hover:border-blue-300 hover:shadow-md transition-all"
-                >
-                  <div className="flex items-start justify-between mb-4">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 bg-linear-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center text-white font-bold shadow-sm">
-                        {idx + 1}
-                      </div>
-                      <div>
-                        <div className="text-xs text-gray-500 mb-1">
-                          Wallet {idx + 1}
+              {(user?.wallet_addresses || []).map((addr, idx) => {
+                const addrBalance = balanceData?.balances?.per_address?.find(
+                  (b: any) => b.address === addr
+                );
+                
+                return (
+                  <div
+                    key={addr}
+                    className="group p-5 bg-linear-to-br from-gray-50 to-blue-50/50 rounded-xl border-2 border-gray-200 hover:border-blue-300 hover:shadow-md transition-all"
+                  >
+                    <div className="flex items-start justify-between mb-4">
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 bg-linear-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center text-white font-bold shadow-sm">
+                          {idx + 1}
                         </div>
-                        <div
-                          className={`px-2.5 py-0.5 rounded-full text-xs font-semibold ${
-                            addr === connectedWallet?.address
-                              ? 'bg-emerald-100 text-emerald-700 border border-emerald-200'
-                              : 'bg-gray-100 text-gray-600 border border-gray-200'
-                          }`}
-                        >
-                          {addr === connectedWallet?.address ? '● Active' : 'Connected'}
+                        <div>
+                          <div className="text-xs text-gray-500 mb-1">
+                            Wallet {idx + 1}
+                          </div>
+                          <div
+                            className={`px-2.5 py-0.5 rounded-full text-xs font-semibold ${
+                              addr === connectedWallet?.address
+                                ? 'bg-emerald-100 text-emerald-700 border border-emerald-200'
+                                : 'bg-gray-100 text-gray-600 border border-gray-200'
+                            }`}
+                          >
+                            {addr === connectedWallet?.address ? '● Active' : 'Connected'}
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
 
-                  <div className="font-mono text-xs text-gray-700 break-all mb-4 bg-white/50 p-3 rounded-lg">
-                    {addr}
-                  </div>
+                    {/* Balance for this address */}
+                    {addrBalance && (
+                      <div className="mb-3 p-3 bg-linear-to-r from-blue-50 to-purple-50 rounded-lg border border-blue-100">
+                        <div className="text-xs text-gray-600 mb-1">Balance</div>
+                        <div className="text-xl font-bold text-gray-900">
+                          {formatAda(addrBalance.ada_balance)}
+                        </div>
+                      </div>
+                    )}
 
-                  <div className="flex gap-2">
-                    <button
-                      onClick={() => navigator.clipboard.writeText(addr)}
-                      className="flex-1 px-3 py-2 bg-white border border-gray-200 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 hover:border-gray-300 transition-all flex items-center justify-center gap-2"
-                    >
-                      <Copy className="w-4 h-4" />
-                      Copy
-                    </button>
-                    <button
-                      onClick={() =>
-                        window.open(
-                          `https://preprod.cardanoscan.io/address/${addr}`,
-                          '_blank'
-                        )
-                      }
-                      className="flex-1 px-3 py-2 bg-white border border-gray-200 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 hover:border-gray-300 transition-all flex items-center justify-center gap-2"
-                    >
-                      <ExternalLink className="w-4 h-4" />
-                      View
-                    </button>
+                    <div className="font-mono text-xs text-gray-700 break-all mb-4 bg-white/50 p-3 rounded-lg">
+                      {addr}
+                    </div>
+
+                    <div className="flex gap-2">
+                      <button
+                        onClick={() => navigator.clipboard.writeText(addr)}
+                        className="flex-1 px-3 py-2 bg-white border border-gray-200 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 hover:border-gray-300 transition-all flex items-center justify-center gap-2"
+                      >
+                        <Copy className="w-4 h-4" />
+                        Copy
+                      </button>
+                      <button
+                        onClick={() =>
+                          window.open(
+                            `https://preprod.cardanoscan.io/address/${addr}`,
+                            '_blank'
+                          )
+                        }
+                        className="flex-1 px-3 py-2 bg-white border border-gray-200 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 hover:border-gray-300 transition-all flex items-center justify-center gap-2"
+                      >
+                        <ExternalLink className="w-4 h-4" />
+                        View
+                      </button>
+                    </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
 
