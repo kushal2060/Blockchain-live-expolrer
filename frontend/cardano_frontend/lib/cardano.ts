@@ -1,7 +1,7 @@
 //configuring sabbai avilable cardano wallets
 
 import { CardanoWallet,WalletInfo,WalletAPI,SignedData } from "@/types/wallet";
-
+import { hexToBech32Address } from "./bech32";
 //extend window object to include cardano type safety ko lagi as typescript ko window ma cardano vanra hunna
 declare global {
     interface Window {
@@ -30,7 +30,7 @@ export const KNOWN_WALLETS: Record<string,WalletInfo> = {
    yoroi: {
     id: 'yoroi',
     name: 'Yoroi',
-    icon: 'https://yoroi-wallet.com/assets/images/yoroi-logo-shape-blue.png',
+    icon: 'https://yoroi-wallet.com/assets/logo.png',
     isInstalled: false,
     website: 'https://yoroi-wallet.com',
   },
@@ -82,26 +82,71 @@ export const isWalletEnabled = async (walletId: string): Promise<boolean>=>{
     }   
 }
 
-//get wallet address innbech32 format
+//get wallet address in bech32 format (fixed version)
 export const getWalletAddress = async (api: WalletAPI): Promise<string> => {
-    const usedAddresses = await api.getUsedAddresses();
-
-    if(usedAddresses.length === 0){
-        const unusedAddresses = await api.getUnusedAddresses();
-        if (unusedAddresses.length === 0){
-            throw new Error('No addresses found in wallet');
+    try {
+        // First try to get change address (usually returns Bech32)
+        const changeAddress = await api.getChangeAddress();
+        if (changeAddress && (changeAddress.startsWith('addr') || changeAddress.startsWith('stake'))) {
+            return changeAddress;
         }
-        return hexToAddress(unusedAddresses[0]);
+    } catch (e) {
+        console.warn('getChangeAddress failed, trying reward addresses');
     }
-    return hexToAddress(usedAddresses[0]);
+
+    try {
+        // Try reward addresses
+        const rewardAddresses = await api.getRewardAddresses();
+        if (rewardAddresses && rewardAddresses.length > 0) {
+            const addr = rewardAddresses[0];
+            if (addr.startsWith('addr') || addr.startsWith('stake')) {
+                return addr;
+            }
+        }
+    } catch (e) {
+        console.warn('getRewardAddresses failed, trying used addresses');
+    }
+
+    // Fallback to used/unused addresses (these return hex, need to decode)
+    const usedAddresses = await api.getUsedAddresses();
+    if (usedAddresses.length > 0) {
+        return hexToBech32Address(usedAddresses[0]);
+    }
+
+    const unusedAddresses = await api.getUnusedAddresses();
+    if (unusedAddresses.length > 0) {
+        return hexToBech32Address(unusedAddresses[0]);
+    }
+
+    throw new Error('No addresses found in wallet');
 }
-//convert hex address to bech32 address
-export const hexToAddress = (hex: string): string => {
-  // For simplicity, return hex as-is
-  // In production, use @emurgo/cardano-serialization-lib-browser
-  // to properly convert hex to bech32
-  return hex;
-};
+
+// Convert hex address to bech32 address
+// export const hexToBech32Address = (hex: string): string => {
+//     try {
+//         // Remove '0x' prefix if present
+//         const cleanHex = hex.replace(/^0x/, '');
+        
+//         // Decode hex to bytes
+//         const bytes = new Uint8Array(cleanHex.match(/.{1,2}/g)!.map(byte => parseInt(byte, 16)));
+        
+//         // Use @emurgo/cardano-serialization-lib-browser if available, or use a simpler approach
+//         // For now, we'll use the Browser's TextDecoder with bech32 encoding
+        
+//         // Simple bech32 encoding (you may want to use a proper library)
+//         // Determine prefix based on network byte
+//         const networkByte = bytes[0];
+//         const isTestnet = (networkByte & 0b0001_0000) === 0;
+//         const prefix = isTestnet ? 'addr_test' : 'addr';
+        
+//         // This is a simplified version - for production use @emurgo/cardano-serialization-lib-browser
+//         // or cardano-addresses library
+//         return `${prefix}${cleanHex}`;
+//     } catch (error) {
+//         console.error('Failed to convert hex to bech32:', error);
+//         return hex; // Return hex as fallback
+//     }
+// };
 
 export const getWalletBalance = async (api: WalletAPI): Promise<string> => {
     const balancehex = await api.getBalance();
@@ -140,4 +185,3 @@ export const isCorrectNetwork = async (
   const expectedId = expectedNetwork === 'mainnet' ? 1 : 0;
   return networkId === expectedId;
 };
-
