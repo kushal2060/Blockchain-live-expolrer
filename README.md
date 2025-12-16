@@ -23,12 +23,12 @@
 
 ---
 
-## ✨ Features
+##  Features
 
 <table>
   <tr>
     <td width="33%" align="center">
-      <h3>⚡ Real-Time Streaming</h3>
+      <h3> Real-Time Streaming</h3>
       <p>Watch blocks and transactions as they happen on the blockchain with WebSocket connections</p>
     </td>
     <td width="33%" align="center">
@@ -51,14 +51,14 @@
 
 ---
 
-## 🌐 Live Deployment
+##  Live Deployment
 
 | Service | URL |
 |---------|-----|
-| 🎨 **Frontend** | [blockchainliveexpolrer-production-af39.up.railway.app](https://blockchainliveexpolrer-production-af39.up.railway.app/) |
-| 🔧 **Backend API** | [blockchainliveexpolrer-production-b895.up.railway.app](https://blockchainliveexpolrer-production-b895.up.railway.app/) |
-| 📡 **WebSocket** | `wss://blockchainliveexpolrer-production-b895.up.railway.app/ws` |
-| 🏥 **Health Check** | [Backend Health](https://blockchainliveexpolrer-production-b895.up.railway.app/health) |
+| **Frontend** | [blockchainliveexpolrer-production-af39.up.railway.app](https://blockchainliveexpolrer-production-af39.up.railway.app/) |
+|  **Backend API** | [blockchainliveexpolrer-production-b895.up.railway.app](https://blockchainliveexpolrer-production-b895.up.railway.app/) |
+|  **WebSocket** | `wss://blockchainliveexpolrer-production-b895.up.railway.app/ws` |
+| **Health Check** | [Backend Health](https://blockchainliveexpolrer-production-b895.up.railway.app/health) |
 
 ---
 
@@ -133,7 +133,7 @@ graph LR
 
 ---
 
-## 🚀 Quick Start
+##  Quick Start
 
 ### Prerequisites
 
@@ -303,7 +303,7 @@ sequenceDiagram
 
 ---
 
-## 📡 API Endpoints
+##  API Endpoints
 
 ### Public Endpoints
 
@@ -443,33 +443,13 @@ frontend/
 
 </details>
 
----
-
-##  Screenshots
-
-<div align="center">
-
-### Home Page
-*Real-time blockchain explorer with live blocks and transactions*
-
-<img src="https://via.placeholder.com/800x400/3B82F6/FFFFFF?text=Home+Page+Screenshot" alt="Home Page" width="800"/>
-
----
-
-
-### My Transactions
-*Track all transactions from your connected wallets*
-
-<img src="https://via.placeholder.com/800x400/10B981/FFFFFF?text=My+Transactions+Screenshot" alt="My Transactions" width="800"/>
-
-</div>
 
 
 ---
 
 ## Deployment
 
-### Backend Deployment (Railway/Fly.io)
+### Backend Deployment (Railway)
 
 ```dockerfile
 # Dockerfile is already configured
