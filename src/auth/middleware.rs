@@ -4,7 +4,8 @@ use actix_web::{
 };
 use futures_util::future::LocalBoxFuture;
 use std::future::{ready,Ready};
-use std::rc::Rc;
+// use std::rc::Rc;
+use std::sync::Arc;
 
 
 
@@ -13,7 +14,7 @@ use super::{jwt::JwtService,Claims,SessionStore};
 //middleware factory
 
 pub struct AuthMiddleWare{
-    pub session_store: Rc<SessionStore>,
+    pub session_store: Arc<SessionStore>,
 }
 
 impl<S> Transform<S, ServiceRequest> for AuthMiddleWare
@@ -28,15 +29,15 @@ where
 
     fn new_transform(&self, service: S) -> Self::Future {
         ready(Ok(AuthMiddlewareService {
-            service: Rc::new(service),
+            service: Arc::new(service),
             session_store: self.session_store.clone(),
         }))
     }
 }
 
 pub struct  AuthMiddlewareService<S> {
-    service: Rc<S>,
-    session_store: Rc<SessionStore>,
+    service: Arc<S>,
+    session_store: Arc<SessionStore>,
 }
 
 impl<S> Service<ServiceRequest> for AuthMiddlewareService<S>

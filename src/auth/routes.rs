@@ -99,7 +99,7 @@ pub async  fn login(
 }
 
 //logout ko lagi
-#[post("/api/auth/logout")]
+#[post("/logout")]
 pub async fn logout(
     req: HttpRequest,
     session_store: web::Data<Arc<SessionStore>>,
@@ -155,7 +155,7 @@ pub async fn referesh_token(req: web::Json<RefereshRequest>) -> impl Responder{
 }
 
 //current user info
-#[get("/api/auth/me")]
+#[get("/me")]
 pub async fn get_current_user(
     req: HttpRequest,
     session_store: web::Data<Arc<SessionStore>>,
@@ -186,7 +186,7 @@ pub struct AddWalletRequest {
     public_key: String,
 }
 
-#[post("/api/auth/add-wallet")]
+#[post("/add-wallet")]
 pub async fn add_wallet(
     req: HttpRequest,
     add_wallet_req: web::Json<AddWalletRequest>,
@@ -229,4 +229,38 @@ pub async fn add_wallet(
             }))
         }
     }
+    
+}
+
+// TEST ENDPOINT - REMOVE IN PRODUCTION!
+#[cfg(debug_assertions)]
+#[post("/api/auth/test-login")]
+pub async fn test_login(
+    session_store: web::Data<Arc<SessionStore>>,
+) -> impl Responder {
+    let test_address = "addr_test1qztest123example".to_string();
+    
+    log::warn!("⚠️ TEST LOGIN - This should only work in debug mode!");
+    
+    // Create session
+    let session = session_store.create_session(test_address.clone()).await;
+    let addresses: Vec<String> = session.wallet_addresses.iter().cloned().collect();
+    
+    // Generate tokens
+    let access_token = JwtService::generate_access_token(&test_address, addresses.clone())
+        .unwrap();
+    let refresh_token = JwtService::generate_refresh_token(&test_address, addresses.clone())
+        .unwrap();
+    
+    HttpResponse::Ok().json(AuthRes {
+        access_token,
+        refresh_token,
+        token_type: "Bearer".to_string(),
+        expires_in: 900,
+        user: UserInfo {
+            address: test_address,
+            wallet_addresses: addresses,
+            created_at: session.created_at,
+        },
+    })
 }

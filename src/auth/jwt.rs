@@ -6,10 +6,14 @@ use std::i64;
 use jsonwebtoken::{encode,decode,Header,Validation,EncodingKey,DecodingKey,Algorithm};
 use serde::{Serialize,Deserialize};
 use uuid::Uuid;
+use once_cell::sync::Lazy;
 
 use super::Claims;
 
-const JWT_SECRET: &str = "jwtkey";
+static JWT_SECRET: Lazy<String> = Lazy::new(|| {
+    dotenv::dotenv().ok();
+    std::env::var("JWT_SECRET").unwrap_or_else(|_| "jwtkey".to_string())
+});
 const ACCESS_TOKEN_EXPIRY: i64= 900; //15min
 const REFERESH_TOKEN_EXPITY:i64=604800; //7days
 
@@ -30,7 +34,7 @@ impl JwtService {
         encode(
             &Header::default(),
             &claims,
-            &EncodingKey::from_secret(JWT_SECRET.as_ref()),
+            &EncodingKey::from_secret(JWT_SECRET.as_bytes()),
         )
     }
 
@@ -49,7 +53,7 @@ impl JwtService {
         encode(
             &Header::default(),
             &claims,
-            &EncodingKey::from_secret(JWT_SECRET.as_ref()),
+            &EncodingKey::from_secret(JWT_SECRET.as_bytes()),
         )
     }
 
@@ -57,7 +61,7 @@ impl JwtService {
     pub fn verify_token(token: &str) -> Result<Claims, jsonwebtoken::errors::Error> {
         decode::<Claims>(
             token,
-            &DecodingKey::from_secret(JWT_SECRET.as_ref()),
+            &DecodingKey::from_secret(JWT_SECRET.as_bytes()),
             &Validation::new(Algorithm::HS256),
         )
         .map(|data| data.claims)
