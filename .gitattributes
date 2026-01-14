@@ -1,0 +1,3 @@
+backend/* linguist-language=Rust
+frontend/* linguist-language=TypeScript
+*.toml linguist-language=Rust
