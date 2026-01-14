@@ -10,7 +10,7 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![Cardano](https://img.shields.io/badge/Cardano-0033AD?style=for-the-badge&logo=cardano&logoColor=white)](https://cardano.org/)
 
-**[Live Demo](https://blockchainliveexpolrer-production-af39.up.railway.app/)**  • **[Report Bug](https://github.com/kushal2060/Blockchain_live_expolrer/issues)**
+**[Live Demo](https://blockchain-live-expolrer.vercel.app/)**  • **[Report Bug](https://github.com/kushal2060/Blockchain_live_expolrer/issues)**
 
 ---
 
@@ -55,10 +55,10 @@
 
 | Service | URL |
 |---------|-----|
-| **Frontend** | [blockchainliveexpolrer-production-af39.up.railway.app](https://blockchainliveexpolrer-production-af39.up.railway.app/) |
-|  **Backend API** | [blockchainliveexpolrer-production-b895.up.railway.app](https://blockchainliveexpolrer-production-b895.up.railway.app/) |
+| **Frontend** | [blockchainliveexpolrer-production-af39.up.railway.app](https://blockchain-live-expolrer.vercel.app/) |
+|  **Backend API** | [blockchainliveexpolrer-production-b895.up.railway.app](https://blockchain-live-expolrer.onrender.com/) |
 |  **WebSocket** | `wss://blockchainliveexpolrer-production-b895.up.railway.app/ws` |
-| **Health Check** | [Backend Health](https://blockchainliveexpolrer-production-b895.up.railway.app/health) |
+| **Health Check** | [Backend Health](https://blockchain-live-expolrer.onrender.com/health) |
 
 ---
 
@@ -294,7 +294,7 @@ sequenceDiagram
    - Receive 10,000 test ADA
 
 4. **Connect to Explorer**
-   - Visit the [live demo](https://blockchainliveexpolrer-production-af39.up.railway.app/)
+   - Visit the [live demo](https://blockchain-live-expolrer.vercel.app/)
    - Click "Connect Wallet"
    - Select your wallet
    - Approve connection
