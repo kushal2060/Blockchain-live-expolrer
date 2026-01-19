@@ -117,23 +117,13 @@ class APIClient {
     signature: string;
     public_key: string;
   }): Promise<AuthResponse> {
-    console.log("Raw public_key from wallet:", data.public_key);
-    console.log("Raw signature from wallet:", data.signature);
-    console.log("Message being sent:", data.message); 
-    console.log("Address being sent:", data.address); 
-    
-    // Only normalize public key, send signature as-is (full COSE structure)
     const normalizedPublicKey = normalizePublicKey(data.public_key);
-    
-    console.log("Normalized public_key (64 hex chars):", normalizedPublicKey);
-    console.log("Sending full COSE signature (not normalized)");
-    
     const response = await this.request<AuthResponse>('/api/auth/login', {
       method: 'POST',
       body: JSON.stringify({
         address: data.address,
         message: data.message,
-        signature: data.signature,  // Send full COSE structure
+        signature: data.signature,  
         public_key: normalizedPublicKey,
       }),
     });
